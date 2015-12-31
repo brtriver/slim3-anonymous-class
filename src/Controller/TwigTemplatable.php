@@ -14,16 +14,19 @@ trait  TwigTemplatable
         $this->templatePath = __DIR__ . '/../../templates/';
         $this->cachePath = '/tmp/';
 
-        // Get container
-        $container = $this->app->getContainer();
-
         // Register component on container
         $this->view = new \Slim\Views\Twig($this->templatePath, [
             'cache' => $this->cachePath
         ]);
         $this->view->addExtension(new \Slim\Views\TwigExtension(
-            $container['router'],
-            $container['request']->getUri()
+            $this->container['router'],
+            $this->container['request']->getUri()
         ));
+    }
+
+    public function renderTwig($path, $args)
+    {
+        $this->useTwig();
+        $this->view->render($this->response, $path, $args);
     }
 }

@@ -7,38 +7,31 @@ use Karen\Controller\TwigTemplatable;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$app = new \Slim\App;
-$app->get('/hello/{name}', function (Request $request, Response $response) {
-    $name = $request->getAttribute('name');
-    $response->getBody()->write("Hello, $name");
+$c = new \Slim\Container;
+$c['greet'] = 'Hello ';
+
+$app = new \Slim\App($c);
+
+$app->get('/hello/{name}', function (Request $request, Response $response) use ($app){
+    $response->write($app->getContainer()['greet'] . $args['name']);
 
     return $response;
 });
 
 $app->get('/plain/{name}', new class($app) extends MyController {
 
-        public function __invoke(Request $request,  Response $response, $args)
+        public function action($args)
         {
-            $output = 'hello ' . $args['name'];
-
-            return $this->render($response, $output);
+            return $this->render($this->container['greet'] . $args['name']);
         }
 });
 
 $app->get('/twig/{name}', new class($app) extends MyController {
         use TwigTemplatable;
 
-        public function __invoke(Request $request,  Response $response, $args)
+        public function action($args)
         {
-            // render by twig
-            $this->useTwig();
-            $output = $this->view->fetch('web.html', [
-                'name' => $args['name']
-            ]);
-
-            return $this->render($response, $output);
-
-            // if render with 404 status, call `$this->render404` in MyController
+            return $this->renderTwig('web.html', ['name' => $args['name']]);
         }
 });
 

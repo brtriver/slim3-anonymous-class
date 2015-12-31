@@ -27,57 +27,60 @@ $ php -S localhost:8888 -t ./web
 Example
 -------
 
-see `web/index.php`:
+a default Slim3 Hello example is below:
 
 ```php
-<?php
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+$c = new \Slim\Container;
+$c['greet'] = 'Hello ';
 
-use Karen\Controller\MyController;
-use Karen\Controller\TwigTemplatable;
+$app = new \Slim\App($c);
 
-require __DIR__ . '/../vendor/autoload.php';
-
-$app = new \Slim\App;
-$app->get('/hello/{name}', function (Request $request, Response $response) {
-    $name = $request->getAttribute('name');
-    $response->getBody()->write("Hello, $name");
+$app->get('/hello/{name}', function (Request $request, Response $response) use ($app){
+    $response->write($app->getContainer()['greet'] . $args['name']);
 
     return $response;
 });
+```
 
-// render with MyController::render method without twig
-$app->get('/plain/{name}', new class($app) extends MyController {
+but slim3-anonymous-class is like:
 
-        public function __invoke(Request $request,  Response $response, $args)
+```php
+$app->get('/hello/{name}', new class($app) extends MyController {
+
+        public function action($args)
         {
-            $output = 'hello ' . $args['name'];
-
-            return $this->render($response, $output);
+            return $this->render($this->container['greet'] . $args['name']);
         }
 });
+```
 
-// render with MyController::render method with twig
-$app->get('/twig/{name}', new class($app) extends MyController {
+It is too easy to read because of you don't have to know about `$response` and how to access a container object.
+
+And it is too easy to extend action with a trait class.
+If you want use Twig as a template engine:
+
+```php
+$app->get('/hello/{name}', function ($request, $response, $args) {
+    return $this->view->render($response, 'profile.html', [
+        'name' => $args['name']
+    ]);
+})->setName('profile');
+```
+
+This action should know about `$this->view` and `$response` but using trait like blow:
+
+```php
+$app->get('/hello/{name}', new class($app) extends MyController {
         use TwigTemplatable;
 
-        public function __invoke(Request $request,  Response $response, $args)
+        public function action($args)
         {
-            // render by twig
-            $this->useTwig();
-            $output = $this->view->fetch('web.html', [
-                'name' => $args['name']
-            ]);
-
-            return $this->render($response, $output);
-
-            // if render with 404 status, call `$this->render404` in MyController
+            return $this->renderTwig('web.html', ['name' => $args['name']]);
         }
 });
-
-$app->run();
 ```
+
+This sample uses `TwigTemplatable` trait class and too simple.
 
 License
 -------
