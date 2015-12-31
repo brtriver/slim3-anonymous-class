@@ -69,6 +69,6 @@ $app->run();
 License
 -------
 
-DateRange is licensed under the MIT license.
+slim3-anonymous-class is licensed under the MIT license.
 
 
