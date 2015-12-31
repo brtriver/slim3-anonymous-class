@@ -1,6 +1,8 @@
 <?php
 namespace Karen\Controller;
 
+use \Psr\Http\Message\ResponseInterface as Response;
+
 trait  TwigTemplatable
 {
     private $templatePath;
