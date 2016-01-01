@@ -6,7 +6,7 @@ This application is sample to use anonymous class wit Slim3
 Requirements
 ------------
 
-DateRange works with PHP 7.0 or later.
+* PHP 7.0 or later.
 
 Install
 --------
