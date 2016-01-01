@@ -35,7 +35,7 @@ $c['greet'] = 'Hello ';
 
 $app = new \Slim\App($c);
 
-$app->get('/hello/{name}', function (Request $request, Response $response) use ($app){
+$app->get('/hello/{name}', function (Request $request, Response $response, $args) use ($app){
     $response->write($app->getContainer()['greet'] . $args['name']);
 
     return $response;
@@ -64,7 +64,7 @@ $app->get('/hello/{name}', function ($request, $response, $args) {
     return $this->view->render($response, 'profile.html', [
         'name' => $args['name']
     ]);
-})->setName('profile');
+});
 ```
 
 This action should know about `$this->view` and `$response` but using trait like blow:

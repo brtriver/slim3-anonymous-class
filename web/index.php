@@ -12,7 +12,7 @@ $c['greet'] = 'Hello ';
 
 $app = new \Slim\App($c);
 
-$app->get('/hello/{name}', function (Request $request, Response $response) use ($app){
+$app->get('/hello/{name}', function (Request $request, Response $response, $args) use ($app){
     $response->write($app->getContainer()['greet'] . $args['name']);
 
     return $response;
