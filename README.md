@@ -1,28 +1,15 @@
 slim3-anonymous-class -- sample anonymous class wit Slim3
 ==============================================
 
-This application is sample to use anonymous class wit Slim3
+This application is sample code to use anonymous class wit Slim3.
+If you use this in your Slim3 application. [install brtriver/slim3-controller](https://github.com/brtriver/slim3-controller)
+
 
 Requirements
 ------------
 
 * PHP 7.0 or later.
-
-Install
---------
-
-```bash
-$ git clone git@github.com:brtriver/slim3-anonymous-class.git
-```
-
-Try demo
---------
-
-```bash
-$ make setup
-$ make install
-$ php -S localhost:8888 -t ./web
-```
+* Slim3
 
 Example
 -------
